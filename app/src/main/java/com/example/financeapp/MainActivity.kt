@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.dp
 
 // Практика Git: задача 1
 
+//Задача со звездочкой
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
