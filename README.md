@@ -3,4 +3,6 @@
 Курс Android-разработка, лекция 1
 ![img.png](img.png)
 
-FinanceApp — версия из основной ветки
+
+FinanceApp — версия из ветки профиля
+>>>>>>> feature/conflict
