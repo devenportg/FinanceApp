@@ -6,29 +6,26 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.financeapp.legacy.Transaction
 import com.example.financeapp.legacy.reduce
-
 internal enum class TransactionType { INCOME, EXPENSE }
 
 internal enum class TranscationError {
-    INVALID_INPUT, AMOUNT_TOO_LARGE
+    INVALID_INPUT,
+    AMOUNT_TOO_LARGE
 }
-
-internal data class Transcation (
+internal data class Transcation(
     val amount: Int,
     val type: TransactionType,
     val description: String,
 )
-
 internal data class MainUiState(
     val amount: String = "",
     val description: String = "",
     val type: TransactionType = TransactionType.EXPENSE,
-    val  balance: Int = 0,
+    val balance: Int = 0,
     val TranscationCount: Int = 0,
     val transactions: List<Transaction> = emptyList(),
     val error: TranscationError? = null,
 )
-
 internal sealed interface MainUiEvent {
     data class AmountChanged(val value: String) : MainUiEvent
     data class DescriptionChanged(val value: String) : MainUiEvent
@@ -44,4 +41,4 @@ internal class TransactionViewModel : ViewModel() {
     fun onEvent(event: MainUiEvent) {
         uiState = reduce(uiState, event)
     }
-}
+ }

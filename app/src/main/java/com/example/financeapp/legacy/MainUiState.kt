@@ -1,7 +1,5 @@
 package com.example.financeapp.legacy
-
 private const val INITIAL_BALANCE = 25_000
-
 internal data class MainUiState(
     val balance: Int = INITIAL_BALANCE,
     val transactionCount: Int = 0,
@@ -20,7 +18,6 @@ internal data class Transaction(
 internal sealed interface MainUiEvent {
     data class TransactionAdded(val transaction: Transaction) : MainUiEvent
 }
-
 
 internal fun reduce(state: MainUiState, event: MainUiEvent): MainUiState = when (event) {
     is MainUiEvent.TransactionAdded -> {

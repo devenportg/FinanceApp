@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.example.financeapp.R
 import com.example.financeapp.FinanceAppTheme
 
-
 private const val INCOME_AMOUNT = 500
 private const val EXPENSE_AMOUNT = 250
 
@@ -76,15 +75,12 @@ internal fun FinanceAppScreen() {
                 onClick = {
                     val transaction = Transaction(
                         EXPENSE_AMOUNT,
-                        TransactionType.EXPENSE
-                    )
+                        TransactionType.EXPENSE )
                     state = reduce(
                         state,
                         MainUiEvent.TransactionAdded(
-                            transaction
-                        )
-                    )
-                },
+                            transaction ))
+                }
             ) {
                 Text(text = stringResource(_root_ide_package_.com.example.financeapp.R.string.add_expense_button))
             }
