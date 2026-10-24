@@ -1,8 +1,11 @@
 package com.example.financeapp
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.financeapp.legacy.Transaction
+import com.example.financeapp.legacy.reduce
 
 internal enum class TransactionType { INCOME, EXPENSE }
 
@@ -38,4 +41,7 @@ internal sealed interface MainUiEvent {
 internal class TransactionViewModel : ViewModel() {
     var uiState by mutableStateOf(MainUiState())
         private set
+    fun onEvent(event: MainUiEvent) {
+        uiState = reduce(uiState, event)
+    }
 }
