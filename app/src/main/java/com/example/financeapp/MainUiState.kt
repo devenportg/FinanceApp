@@ -1,48 +1,41 @@
 package com.example.financeapp
 
-// Начальный баланс — именованная константа вместо «магического числа» в коде.
-private const val INITIAL_BALANCE = 25_000
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import com.example.financeapp.legacy.Transaction
 
-/**
- * Всё состояние экрана в одном неизменяемом объекте:
- * баланс и число выполненных операций.
- */
-internal data class MainUiState(
-    val balance: Int = INITIAL_BALANCE,
-    val transactionCount: Int = 0,
-)
+internal enum class TransactionType { INCOME, EXPENSE }
 
-internal enum class TransactionType {
-    INCOME,
-    EXPENSE,
+internal enum class TranscationError {
+    INVALID_INPUT, AMOUNT_TOO_LARGE
 }
 
-internal data class Transaction(
+internal data class Transcation (
     val amount: Int,
     val type: TransactionType,
+    val description: String,
+)
+
+internal data class MainUiState(
+    val amount: String = "",
+    val description: String = "",
+    val type: TransactionType = TransactionType.EXPENSE,
+    val  balance: Int = 0,
+    val TranscationCount: Int = 0,
+    val transactions: List<Transaction> = emptyList(),
+    val error: TranscationError? = null,
 )
 
 internal sealed interface MainUiEvent {
-    data class TransactionAdded(val transaction: Transaction) : MainUiEvent
+    data class AmountChanged(val value: String) : MainUiEvent
+    data class DescriptionChanged(val value: String) : MainUiEvent
+    data class TypeChanged(val type: TransactionType) : MainUiEvent
+    data class AddTranscation(val transcation: Transcation) : MainUiEvent
+    data object InvalidTranscation : MainUiEvent
+    data object AmountTooLarge : MainUiEvent
 }
 
-/**
- * Чистая функция: получает старое состояние и событие,
- * возвращает новое состояние. Ничего не меняет «на месте».
- */
-internal fun reduce(state: MainUiState, event: MainUiEvent): MainUiState = when (event) {
-    is MainUiEvent.TransactionAdded -> {
-        val transaction = event.transaction
-        require(transaction.amount > 0) { "Сумма операции должна быть положительной" }
-
-        val delta = when (transaction.type) {
-            TransactionType.INCOME -> transaction.amount
-            TransactionType.EXPENSE -> -transaction.amount
-        }
-
-        state.copy(
-            balance = state.balance + delta,
-            transactionCount = state.transactionCount + 1,
-        )
-    }
+internal class TransactionViewModel : ViewModel() {
+    var uiState by mutableStateOf(MainUiState())
+        private set
 }
