@@ -15,14 +15,13 @@ class MainActivity : ComponentActivity() {
             FinanceAppTheme {
                 TransactionScreen()
             }
-            35
         }
     }
 }
 
-    // Тема нужна и Preview из другого файла, поэтому объявлена internal.
-    @Composable
-    @Suppress("FunctionNaming")
-    internal fun FinanceAppTheme(content: @Composable () -> Unit) {
-        MaterialTheme(content = content)
-    }
+// Тема нужна и Preview из другого файла, поэтому объявлена internal.
+@Composable
+@Suppress("FunctionNaming")
+internal fun FinanceAppTheme(content: @Composable () -> Unit) {
+    MaterialTheme(content = content)
+}

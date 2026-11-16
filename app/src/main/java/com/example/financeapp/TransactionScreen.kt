@@ -31,9 +31,7 @@ private val chipSpacing = 8.dp
 
 @Composable
 @Suppress("FunctionNaming")
-internal fun TransactionScreen(
-    viewModel: TransactionViewModel = viewModel(),
-) {
+internal fun TransactionScreen(viewModel: TransactionViewModel = viewModel()) {
     val state = viewModel.uiState
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -107,10 +105,7 @@ private fun TransactionInputFields(
 
 @Composable
 @Suppress("FunctionNaming")
-private fun TransactionTypeSelector(
-    selectedType: TransactionType,
-    onTypeChanged: (TransactionType) -> Unit,
-) {
+private fun TransactionTypeSelector(selectedType: TransactionType, onTypeChanged: (TransactionType) -> Unit) {
     Row(horizontalArrangement = Arrangement.spacedBy(chipSpacing)) {
         FilterChip(
             selected = selectedType == TransactionType.EXPENSE,
