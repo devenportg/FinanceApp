@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.example.financeapp.legacy.FinanceAppScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,15 +13,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FinanceAppTheme {
-                FinanceAppScreen()
+                TransactionScreen()
             }
+            35
         }
     }
 }
 
-// Тема нужна и Preview из другого файла, поэтому объявлена internal.
-@Composable
-@Suppress("FunctionNaming")
-internal fun FinanceAppTheme(content: @Composable () -> Unit) {
-    MaterialTheme(content = content)
-}
+    // Тема нужна и Preview из другого файла, поэтому объявлена internal.
+    @Composable
+    @Suppress("FunctionNaming")
+    internal fun FinanceAppTheme(content: @Composable () -> Unit) {
+        MaterialTheme(content = content)
+    }

@@ -1,44 +1,36 @@
 package com.example.financeapp
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import com.example.financeapp.legacy.Transaction
-import com.example.financeapp.legacy.reduce
-internal enum class TransactionType { INCOME, EXPENSE }
-
-internal enum class TranscationError {
-    INVALID_INPUT,
-    AMOUNT_TOO_LARGE
+internal enum class TransactionType {
+    INCOME,
+    EXPENSE,
 }
-internal data class Transcation(
+
+internal enum class TransactionError {
+    INVALID_INPUT,
+    AMOUNT_TOO_LARGE,
+}
+
+internal data class Transaction(
     val amount: Int,
     val type: TransactionType,
     val description: String,
 )
+
 internal data class MainUiState(
     val amount: String = "",
     val description: String = "",
     val type: TransactionType = TransactionType.EXPENSE,
     val balance: Int = 0,
-    val TranscationCount: Int = 0,
+    val transactionCount: Int = 0,
     val transactions: List<Transaction> = emptyList(),
-    val error: TranscationError? = null,
+    val error: TransactionError? = null,
 )
+
 internal sealed interface MainUiEvent {
     data class AmountChanged(val value: String) : MainUiEvent
     data class DescriptionChanged(val value: String) : MainUiEvent
     data class TypeChanged(val type: TransactionType) : MainUiEvent
-    data class AddTranscation(val transcation: Transcation) : MainUiEvent
-    data object InvalidTranscation : MainUiEvent
+    data class AddTransaction(val transaction: Transaction) : MainUiEvent
+    data object InvalidTransaction : MainUiEvent
     data object AmountTooLarge : MainUiEvent
 }
-
-internal class TransactionViewModel : ViewModel() {
-    var uiState by mutableStateOf(MainUiState())
-        private set
-    fun onEvent(event: MainUiEvent) {
-        uiState = reduce(uiState, event)
-    }
- }

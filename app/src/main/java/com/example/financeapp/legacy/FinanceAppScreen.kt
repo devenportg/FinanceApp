@@ -21,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.financeapp.R
 import com.example.financeapp.FinanceAppTheme
+import com.example.financeapp.R
 
 private const val INCOME_AMOUNT = 500
 private const val EXPENSE_AMOUNT = 250
@@ -49,40 +49,41 @@ internal fun FinanceAppScreen() {
         ) {
             Text(
                 text = stringResource(
-                    _root_ide_package_.com.example.financeapp.R.string.balance_summary,
+                    R.string.balance_summary,
                     state.balance,
                     state.transactionCount,
                 ),
                 style = MaterialTheme.typography.headlineSmall,
             )
+
             Button(
                 onClick = {
                     val transaction = Transaction(
                         INCOME_AMOUNT,
-                        TransactionType.INCOME
+                        TransactionType.INCOME,
                     )
                     state = reduce(
                         state,
-                        MainUiEvent.TransactionAdded(
-                            transaction
-                        )
+                        MainUiEvent.TransactionAdded(transaction),
                     )
                 },
             ) {
-                Text(text = stringResource(_root_ide_package_.com.example.financeapp.R.string.add_income_button))
+                Text(text = stringResource(R.string.add_income_button))
             }
+
             Button(
                 onClick = {
                     val transaction = Transaction(
                         EXPENSE_AMOUNT,
-                        TransactionType.EXPENSE )
+                        TransactionType.EXPENSE,
+                    )
                     state = reduce(
                         state,
-                        MainUiEvent.TransactionAdded(
-                            transaction ))
-                }
+                        MainUiEvent.TransactionAdded(transaction),
+                    )
+                },
             ) {
-                Text(text = stringResource(_root_ide_package_.com.example.financeapp.R.string.add_expense_button))
+                Text(text = stringResource(R.string.add_expense_button))
             }
         }
     }
@@ -92,7 +93,7 @@ internal fun FinanceAppScreen() {
 @Composable
 @Suppress("FunctionNaming", "UnusedPrivateFunction")
 private fun FinanceAppScreenPreview() {
-    _root_ide_package_.com.example.financeapp.FinanceAppTheme {
+    FinanceAppTheme {
         FinanceAppScreen()
     }
 }
