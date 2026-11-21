@@ -90,6 +90,7 @@ dependencies {
 
     val composeBom = platform(libs.androidx.compose.bom)
 
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

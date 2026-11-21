@@ -18,12 +18,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 private val screenPadding = 24.dp
 private val itemSpacing = 12.dp
@@ -31,7 +31,7 @@ private val chipSpacing = 8.dp
 
 @Composable
 @Suppress("FunctionNaming")
-internal fun TransactionScreen(viewModel: TransactionViewModel = viewModel()) {
+internal fun TransactionScreen(viewModel: TransactionViewModel, showBalance: Boolean, onOpenSettings: () -> Unit) {
     val state = viewModel.uiState
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -47,14 +47,24 @@ internal fun TransactionScreen(viewModel: TransactionViewModel = viewModel()) {
                 text = stringResource(R.string.transaction_title),
                 style = MaterialTheme.typography.headlineSmall,
             )
-            Text(
-                text = stringResource(
-                    R.string.balance_summary,
-                    state.balance,
-                    state.transactionCount,
-                ),
-                style = MaterialTheme.typography.headlineSmall,
-            )
+            TextButton(onClick = onOpenSettings) {
+                Text(text = stringResource(R.string.settings_title))
+            }
+            if (showBalance) {
+                Text(
+                    text = stringResource(
+                        R.string.balance_summary,
+                        state.balance,
+                        state.transactionCount,
+                    ),
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.transaction_count, state.transactionCount),
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+            }
             if (state.isLoading) {
                 Text(text = stringResource(R.string.transaction_loading))
             }
