@@ -43,58 +43,83 @@ internal fun TransactionScreen(viewModel: TransactionViewModel, showBalance: Boo
                 .padding(screenPadding),
             verticalArrangement = Arrangement.spacedBy(itemSpacing),
         ) {
-            Text(
-                text = stringResource(R.string.transaction_title),
-                style = MaterialTheme.typography.headlineSmall,
-            )
-            TextButton(onClick = onOpenSettings) {
-                Text(text = stringResource(R.string.settings_title))
-            }
-            if (showBalance) {
-                Text(
-                    text = stringResource(
-                        R.string.balance_summary,
-                        state.balance,
-                        state.transactionCount,
-                    ),
-                    style = MaterialTheme.typography.headlineSmall,
-                )
-            } else {
-                Text(
-                    text = stringResource(R.string.transaction_count, state.transactionCount),
-                    style = MaterialTheme.typography.headlineSmall,
-                )
-            }
-            if (state.isLoading) {
-                Text(text = stringResource(R.string.transaction_loading))
-            }
-            TransactionInputFields(
+            TransactionHeader(
                 state = state,
-                enabled = state.isDatabaseReady && !state.isSaving,
-                onAmountChanged = { value ->
-                    viewModel.onEvent(MainUiEvent.AmountChanged(value))
-                },
-                onDescriptionChanged = { value ->
-                    viewModel.onEvent(MainUiEvent.DescriptionChanged(value))
-                },
+                showBalance = showBalance,
+                onOpenSettings = onOpenSettings,
             )
-            TransactionTypeSelector(
-                selectedType = state.type,
-                enabled = state.isDatabaseReady && !state.isSaving,
-                onTypeChanged = { type ->
-                    viewModel.onEvent(MainUiEvent.TypeChanged(type))
-                },
-            )
-            TransactionErrorMessage(error = state.error)
-            Button(
-                onClick = viewModel::addTransaction,
-                enabled = state.isDatabaseReady && !state.isSaving,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(text = stringResource(R.string.transaction_add))
-            }
+            TransactionForm(viewModel = viewModel, state = state)
             TransactionHistory(transactions = state.transactions)
         }
+    }
+}
+
+@Composable
+@Suppress("FunctionNaming")
+private fun TransactionHeader(state: MainUiState, showBalance: Boolean, onOpenSettings: () -> Unit) {
+    Text(
+        text = stringResource(R.string.transaction_title),
+        style = MaterialTheme.typography.headlineSmall,
+    )
+    TextButton(onClick = onOpenSettings) {
+        Text(text = stringResource(R.string.settings_title))
+    }
+    TransactionBalance(state = state, showBalance = showBalance)
+    if (state.isLoading) {
+        Text(text = stringResource(R.string.transaction_loading))
+    }
+}
+
+@Composable
+@Suppress("FunctionNaming")
+private fun TransactionBalance(state: MainUiState, showBalance: Boolean) {
+    val summaryResource = if (showBalance) {
+        R.string.balance_summary
+    } else {
+        R.string.transaction_count
+    }
+    if (showBalance) {
+        Text(
+            text = stringResource(summaryResource, state.balance, state.transactionCount),
+            style = MaterialTheme.typography.headlineSmall,
+        )
+    } else {
+        Text(
+            text = stringResource(summaryResource, state.transactionCount),
+            style = MaterialTheme.typography.headlineSmall,
+        )
+    }
+}
+
+@Composable
+@Suppress("FunctionNaming")
+private fun TransactionForm(viewModel: TransactionViewModel, state: MainUiState) {
+    val isEnabled = state.isDatabaseReady && !state.isSaving
+
+    TransactionInputFields(
+        state = state,
+        enabled = isEnabled,
+        onAmountChanged = { value ->
+            viewModel.onEvent(MainUiEvent.AmountChanged(value))
+        },
+        onDescriptionChanged = { value ->
+            viewModel.onEvent(MainUiEvent.DescriptionChanged(value))
+        },
+    )
+    TransactionTypeSelector(
+        selectedType = state.type,
+        enabled = isEnabled,
+        onTypeChanged = { type ->
+            viewModel.onEvent(MainUiEvent.TypeChanged(type))
+        },
+    )
+    TransactionErrorMessage(error = state.error)
+    Button(
+        onClick = viewModel::addTransaction,
+        enabled = isEnabled,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(text = stringResource(R.string.transaction_add))
     }
 }
 
