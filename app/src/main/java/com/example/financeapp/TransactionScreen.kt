@@ -43,7 +43,10 @@ internal fun TransactionScreen(viewModel: TransactionViewModel = viewModel()) {
                 .padding(screenPadding),
             verticalArrangement = Arrangement.spacedBy(itemSpacing),
         ) {
-            Text(text = stringResource(R.string.transaction_title))
+            Text(
+                text = stringResource(R.string.transaction_title),
+                style = MaterialTheme.typography.headlineSmall,
+            )
             Text(
                 text = stringResource(
                     R.string.balance_summary,
@@ -52,8 +55,12 @@ internal fun TransactionScreen(viewModel: TransactionViewModel = viewModel()) {
                 ),
                 style = MaterialTheme.typography.headlineSmall,
             )
+            if (state.isLoading) {
+                Text(text = stringResource(R.string.transaction_loading))
+            }
             TransactionInputFields(
                 state = state,
+                enabled = state.isDatabaseReady && !state.isSaving,
                 onAmountChanged = { value ->
                     viewModel.onEvent(MainUiEvent.AmountChanged(value))
                 },
@@ -63,6 +70,7 @@ internal fun TransactionScreen(viewModel: TransactionViewModel = viewModel()) {
             )
             TransactionTypeSelector(
                 selectedType = state.type,
+                enabled = state.isDatabaseReady && !state.isSaving,
                 onTypeChanged = { type ->
                     viewModel.onEvent(MainUiEvent.TypeChanged(type))
                 },
@@ -70,6 +78,7 @@ internal fun TransactionScreen(viewModel: TransactionViewModel = viewModel()) {
             TransactionErrorMessage(error = state.error)
             Button(
                 onClick = viewModel::addTransaction,
+                enabled = state.isDatabaseReady && !state.isSaving,
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(text = stringResource(R.string.transaction_add))
@@ -83,6 +92,7 @@ internal fun TransactionScreen(viewModel: TransactionViewModel = viewModel()) {
 @Suppress("FunctionNaming")
 private fun TransactionInputFields(
     state: MainUiState,
+    enabled: Boolean,
     onAmountChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
 ) {
@@ -92,6 +102,7 @@ private fun TransactionInputFields(
         modifier = Modifier.fillMaxWidth(),
         label = { Text(stringResource(R.string.transaction_description)) },
         singleLine = true,
+        enabled = enabled,
     )
     OutlinedTextField(
         value = state.amount,
@@ -100,20 +111,27 @@ private fun TransactionInputFields(
         label = { Text(stringResource(R.string.transaction_amount)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
+        enabled = enabled,
     )
 }
 
 @Composable
 @Suppress("FunctionNaming")
-private fun TransactionTypeSelector(selectedType: TransactionType, onTypeChanged: (TransactionType) -> Unit) {
+private fun TransactionTypeSelector(
+    selectedType: TransactionType,
+    enabled: Boolean,
+    onTypeChanged: (TransactionType) -> Unit,
+) {
     Row(horizontalArrangement = Arrangement.spacedBy(chipSpacing)) {
         FilterChip(
             selected = selectedType == TransactionType.EXPENSE,
+            enabled = enabled,
             onClick = { onTypeChanged(TransactionType.EXPENSE) },
             label = { Text(stringResource(R.string.transaction_expense)) },
         )
         FilterChip(
             selected = selectedType == TransactionType.INCOME,
+            enabled = enabled,
             onClick = { onTypeChanged(TransactionType.INCOME) },
             label = { Text(stringResource(R.string.transaction_income)) },
         )
@@ -127,6 +145,7 @@ private fun TransactionErrorMessage(error: TransactionError?) {
         val errorResource = when (transactionError) {
             TransactionError.INVALID_INPUT -> R.string.transaction_invalid_input
             TransactionError.AMOUNT_TOO_LARGE -> R.string.transaction_amount_too_large
+            TransactionError.DATABASE_ERROR -> R.string.transaction_database_error
         }
         Text(
             text = stringResource(errorResource),
